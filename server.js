@@ -16,8 +16,6 @@ const userSchema = new mongoose.Schema({
     role: String
 });
 
-
-
 app.get("/", (req, res) => {
     res.send("Welcome To BudFridges")
 })
