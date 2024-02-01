@@ -86,7 +86,9 @@ app.post('/fridge', async (req, res) => {
 // Get all items in the fridge
 app.get('/fridge', async (req, res) => {
     try {
-        const items = await fridgeItem.find();
+        const items = await fridgeItem.find()
+            .sort({expiryDate: +1});
+            
         res.send(items);
     } catch (err) {
         res.status(500).send(err);
