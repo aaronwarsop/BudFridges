@@ -7,18 +7,40 @@ const app = express();
 app.use(bodyParser.json());
 
 const User = require("./models/userModel");
-const fridgeItem = require("./models/fridgeItemModel")
+const fridgeItem = require("./models/fridgeItemModel");
 
 app.get("/", (req, res) => {
     res.send("Welcome To BudFridges")
 })
 
+//register section
+app.post('/register', async (req, res) => {
+    const { username, password, role } = req.body;
+
+    try {
+        const exist = await User.findOne({username:username});
+
+        if (exist) {
+            return res.status(400).send('Username already exists');
+        }
+        else {
+            const user = new User({ username, password, role });
+            await user.save();
+            req.session.user = user;
+            res.redirect('/menu');
+            res.status(201).send(user);
+        }
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 
 //login section
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
+
     try {
-        const user = await User.findOne({ username, password });
+        const user = await User.findOne({ username });
         if (user) {
             req.session.user = user;
             res.redirect('/menu');
