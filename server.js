@@ -83,12 +83,30 @@ app.post('/fridge', async (req, res) => {
     }
 });
 
+//delete item from fridge
+app.delete('/fridge', async (req, res) => {
+    const { itemId, quantity } = req.body;
+
+    try {
+        const item = await fridgeItem.findByIdAndDelete(req.params.id);
+
+        if (!item) {
+            res.status(404).send('Item not found');
+        }
+        else {
+            res.status(200).send(item);
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
 // Get all items in the fridge
 app.get('/fridge', async (req, res) => {
     try {
         const items = await fridgeItem.find()
             .sort({expiryDate: +1});
-            
+
         res.send(items);
     } catch (err) {
         res.status(500).send(err);
