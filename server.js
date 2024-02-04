@@ -150,7 +150,7 @@ mongoose.set("strictQuery", false)
 mongoose.connect('mongodb+srv://AADUser:AADPassword@cluster0.29couu8.mongodb.net/?retryWrites=true&w=majority')
 .then(() =>  {
     console.log('Connected to MongoDB')
-    app.listen(3000, () => {
+    app.listen(5000, () => {
         console.log("BudFridges is running on port 3000")
     })
 }).catch((err) => {
