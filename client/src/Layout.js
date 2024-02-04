@@ -2,7 +2,7 @@ import {Outlet, Link, useNavigate, useLocation} from "react-router-dom";
 import './App.css';
 
 const Layout = () => {
-    
+
     const username = localStorage.getItem('username');
 
     return (
@@ -36,3 +36,5 @@ const Layout = () => {
         </>
     )
 }
+
+export default Layout

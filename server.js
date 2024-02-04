@@ -1,17 +1,18 @@
 const express = require("express")
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const User = require("./models/userModel");
 const fridgeItem = require("./models/fridgeItemModel");
-
-app.get("/", (req, res) => {
-    res.send("Welcome To BudFridges")
-})
 
 //register section
 app.post('/register', async (req, res) => {
@@ -24,7 +25,7 @@ app.post('/register', async (req, res) => {
             return res.status(400).send('Username already exists');
         }
         else {
-            const user = new User({ username, password, role });
+            const user = new User({ username:username, password:password, role:role });
             await user.save();
             req.session.user = user;
             res.redirect('/menu');
@@ -34,6 +35,10 @@ app.post('/register', async (req, res) => {
         res.status(400).send(err);
     }
 });
+
+app.get("/login", cors(), (req, res) => {
+    
+})
 
 //login section
 app.post('/login', async (req, res) => {
@@ -151,7 +156,7 @@ mongoose.connect('mongodb+srv://AADUser:AADPassword@cluster0.29couu8.mongodb.net
 .then(() =>  {
     console.log('Connected to MongoDB')
     app.listen(5000, () => {
-        console.log("BudFridges is running on port 3000")
+        console.log("BudFridges is running on port 5000")
     })
 }).catch((err) => {
     console.error('Error connecting to MongoDB:', err)
