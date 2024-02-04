@@ -22,17 +22,15 @@ app.post('/register', async (req, res) => {
         const exist = await User.findOne({username:username});
 
         if (exist) {
-            return res.status(400).send('Username already exists');
+            res.json('userexists');
         }
         else {
             const user = new User({ username:username, password:password, role:role });
             await user.save();
-            req.session.user = user;
-            res.redirect('/menu');
-            res.status(201).send(user);
+            res.json("accountcreated");
         }
     } catch (err) {
-        res.status(400).send(err);
+        res.json("usernotfound");
     }
 });
 

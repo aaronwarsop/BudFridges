@@ -9,7 +9,7 @@ const Register = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('user');
+    const [role, setRole] = useState('');
 
     async function submit(e) {
         e.preventDefault();
@@ -22,14 +22,18 @@ const Register = () => {
                 if (res.data === "userexists") {
                     alert("User already exists")
                 }
-                else if (res.data.status === "accountcreated") {
+                else if (res.data === "accountcreated") {
                     history("/", {state:{id:username}});
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", role);
+                    alert("Account created")
                 }
             })
+            .catch (error => {
+                alert("Something went wrong")
+                console.log(error);
+            })
         } catch (error) {
-            alert("Error");
             console.log(error);
         }
     }
