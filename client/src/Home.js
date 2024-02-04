@@ -5,6 +5,7 @@ import './App.css';
 const Home = () => {
 
     const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
 
     return (
         <div>

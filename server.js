@@ -43,12 +43,12 @@ app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).select("role");
         if (user) {
-            req.session.user = user;
-            res.redirect('/menu');
+            role = user.role;
+            res.json({status: "userfound", role:role});
         } else {
-            res.send('Invalid username or password');
+            res.json('Invalid username or password');
         }
     } catch (err) {
         console.error(err);
