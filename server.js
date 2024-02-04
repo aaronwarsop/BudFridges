@@ -56,12 +56,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/dashboard', (req, res) => {
-    if (req.session.user) {
-        res.send(`Welcome ${req.session.user.role}`);
-    } else {
-        res.redirect('/login');
-    }
+app.get('/', (req, res) => {
+    
 });
 
 
@@ -83,6 +79,30 @@ app.post('/fridge', async (req, res) => {
         res.status(201).send(newItem);
     } catch (err) {
         res.status(400).send(err);
+    }
+});
+
+app.patch('/fridge/:id', async (req, res) => {
+    const {id} = req.params;
+    const {removeQuantity} = req.body;
+
+    try {
+        const item = await fridgeItem.findOne({itemId:id});
+
+         if (!item) {
+            res.status(404).send('Item not found');
+         }
+
+         if (item.quantity < removeQuantity) {
+            res.status(400).send('Quantity exceeds the amount in the fridge');
+         }
+         else {
+            item.quantity -= removeQuantity;
+            await item.save();
+            res.json("quantityremoved")
+         }
+    } catch (err) {
+        res.status(500).send(err);
     }
 });
 
@@ -117,7 +137,7 @@ app.get('/fridge', async (req, res) => {
 });
 
 //update the fridge items
-app.patch('/fridge/id', async (req, res) => {
+app.patch('/fridge/:id', async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['quantity', 'expiryDate'];
     const isValidOperation = updates.every(update => allowedUpdates.includes(update));
