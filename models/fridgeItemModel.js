@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const fridgeItemSchema = new mongoose.Schema({
-    itemId: { 
-        type: String, 
-        unique: true
-    },
     name:{
         type: String
     },
@@ -13,6 +9,12 @@ const fridgeItemSchema = new mongoose.Schema({
     },
     expiryDate: {
         type: Date
+    },
+    username: {
+        type: String
+    },
+    role: {
+        type: String
     }
 },
 {

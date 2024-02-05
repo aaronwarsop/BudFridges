@@ -10,9 +10,8 @@ const Layout = () => {
             <header>
                 <nav className='pageNav'>
                     <ul>
-                        <li><Link to ="/">Home</Link></li>
-                        <li><Link to ="/Fridge">Fridge</Link></li>
-                        <li><Link to ="/Order">Order</Link></li>
+                        <li><Link to ="/">Fridge</Link></li>
+                        <li><Link to ="/Order">Place Order</Link></li>
                     </ul>
                 </nav>
 

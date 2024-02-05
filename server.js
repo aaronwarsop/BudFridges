@@ -72,22 +72,29 @@ app.get('/logout', (req, res) => {
 });
 
 //add item to fridge
-app.post('/fridge', async (req, res) => {
+app.post('/order', async (req, res) => {
+    const { username, role, orderItemName, orderQuantity } = req.body;
+    
     try {
-        const newItem = new fridgeItem(req.body);
+        const newItem = new fridgeItem({
+            name: orderItemName,
+            quantity: orderQuantity,
+            username: username,
+            role: role
+        });
         await newItem.save();
-        res.status(201).send(newItem);
+        res.json("orderplaced");
     } catch (err) {
-        res.status(400).send(err);
+        res.json("ordernotplaced").send(err);
     }
 });
 
 app.patch('/fridge/:id', async (req, res) => {
-    const {id} = req.params;
+    const {itemName} = req.params;
     const {removeQuantity} = req.body;
 
     try {
-        const item = await fridgeItem.findOne({itemId:id});
+        const item = await fridgeItem.findOne({name:itemName});
 
          if (!item) {
             res.status(404).send('Item not found');
@@ -108,7 +115,7 @@ app.patch('/fridge/:id', async (req, res) => {
 
 //delete item from fridge
 app.delete('/fridge', async (req, res) => {
-    const { itemId, quantity } = req.body;
+    const { name, quantity } = req.body;
 
     try {
         const item = await fridgeItem.findByIdAndDelete(req.params.id);
