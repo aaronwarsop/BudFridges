@@ -74,18 +74,31 @@ app.get('/logout', (req, res) => {
 //add item to fridge
 app.post('/order', async (req, res) => {
     const { username, role, orderItemName, orderQuantity } = req.body;
+
+    const user = username;
+    const userRole = role;
     
     try {
+
         const newItem = new fridgeItem({
             name: orderItemName,
             quantity: orderQuantity,
-            username: username,
-            role: role
+            username: user,
+            role: userRole
         });
+
         await newItem.save();
-        res.json("orderplaced");
+
+        res.json({
+            status: "orderplaced",
+            item: orderItemName,
+            quantity: orderQuantity,
+            username: user,
+            role: userRole
+        });
     } catch (err) {
-        res.json("ordernotplaced").send(err);
+        res.json("ordernotplaced");
+        console.error("Error placing order", err);
     }
 });
 

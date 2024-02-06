@@ -18,7 +18,7 @@ const Order = () => {
                 username, role, orderItemName, orderQuantity
             })
             .then(res => {
-                if (res.data === "orderplaced") {
+                if (res.data.status === "orderplaced") {
                     alert("Order placed")
                     
                 }
