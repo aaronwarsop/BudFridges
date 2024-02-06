@@ -5,9 +5,9 @@ import './App.css';
 const Order = () => {
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
+    const [orderData, setOrderData] = useState([]);
     const [orderItemName, setOrderItemName] = useState('');
     const [orderQuantity, setOrderQuantity] = useState(1);
-    const [orderData, setOrderData] = useState([]);
 
     async function getOrderData() {
         try {

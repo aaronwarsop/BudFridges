@@ -144,8 +144,8 @@ app.patch('/fridge', async (req, res) => {
 
         if (item.quantity < removeQuantity) {
             res.json("removequantityexceeds")
-         }
-         if (item && item.quantity >= removeQuantity) {
+        }
+        if (item && item.quantity >= removeQuantity) {
             const updateQuantity = await fridgeItem.findOneAndUpdate(
                 {itemId:itemId}, 
                 {$inc: {quantity: - removeQuantity}}, 
@@ -156,9 +156,15 @@ app.patch('/fridge', async (req, res) => {
                 status:"quantityremoved",
                 updateQuantity
             });
-         }
+        }
+        if (item.quantity === 0) {
+            fridgeItem.deleteMany({itemId:itemId})
+            res.json("quantityremoved")
+        }
          else {
-            res.json("quantitynotremoved")
+            res.json({
+                status:"quantitynotremoved"
+            })
          }
     } catch (err) {
         console.error(err)
