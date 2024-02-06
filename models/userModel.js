@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
+    },
+    email: {
+        type: String,
+        required: [true, "Please enter an email"],
+        unique: true
     }
 },
 {   
