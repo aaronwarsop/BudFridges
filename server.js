@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require('axios');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -13,10 +14,14 @@ app.use(bodyParser.json());
 
 const User = require("./models/userModel");
 const fridgeItem = require("./models/fridgeItemModel");
+const Passcode = require('./models/Passcode');
+const Delivery = require('./models/deliveryModel');
+const DamagedItem = require('./models/damagedItemModel');
+const DeliveryReport = require("./models/deliveryReportModel");
 
 //register section
 app.post('/register', async (req, res) => {
-    const { username, password, role } = req.body;
+    const { username, password, role, email } = req.body;
 
     try {
         const exist = await User.findOne({username:username});
@@ -71,6 +76,8 @@ app.get('/logout', (req, res) => {
     });
 });
 
+
+
 const randomOrgAPIKey = "98abdc56-e679-4f8f-9667-5c2abfe4d401";
 
 async function generateRandomID() {
@@ -99,8 +106,139 @@ async function generateRandomID() {
     }
 }
 
+//check role  
+function checkRole(req, res, next) {
+    if(req.body.role === 'driver') {
+      if(req.path === '/delivery' || req.path === '/requesting-access') {
+        next();
+      } else {
+        res.status(403).send('Access Denied'); 
+      }
+    } else {
+      next(); 
+    }
+  }
+
+  //random passcode for fridge
+  function generatePasscode() {
+    return Math.floor(100000 + Math.random() * 900000);
+}
+
+async function sendPasscodeToDriver(driverId, passcode) {
+    try {
+       
+        const driver = await User.findById(driverId);
+        if (!driver) {
+            console.error('Driver not found');
+            return;
+        }
+
+        const driverEmail = driver.email;
+        
+        const emailSubject = 'Passcode for External Door Access';
+        const emailText = `Dear Driver,\n\nYour passcode for accessing the external door is: ${passcode}\n\nBest regards,\nThe Management`;
+        
+        await sendEmail(driverEmail, emailSubject, emailText);
+    } catch (error) {
+        console.error('Error sending passcode email:', error);
+    }
+}
+
+// Endpoint to send email notification
+app.post('/send-email', async (req, res) => {
+    const { to, subject, text } = req.body;
+
+    if (!to || !subject || !text) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    try {
+        const result = await sendEmail(to, subject, text);
+        if (result) {
+            res.status(200).json({ message: 'Email sent successfully' });
+        } else {
+            res.status(500).json({ error: 'Failed to send email' });
+        }
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+// Function to send the passcode to the driver via email
+function sendPasscodeToDriver(driverId, passcode) {
+    // make getEmailById to fetch the driver's email from the database
+    const driverEmail = getEmailById(driverId);
+
+    if (!driverEmail) {
+        console.error('Driver email not found');
+        return;
+    }
+
+    // Send passcode to driver's email
+    const emailSubject = 'Passcode for External Door Access';
+    const emailText = `Dear Driver,\n\nYour passcode for accessing the external door is: ${passcode}\n\nBest regards,\nThe Management`;
+    
+    sendEmail(driverEmail, emailSubject, emailText);
+}
+
+// Function to send email
+async function sendEmail(to, subject, text) {
+}
+
+// Endpoint to request access to the external door
+app.post('/requesting-access', checkRole, async (req, res) => {
+    const driverId = req.body.userId;
+
+    // Generate a passcode for the driver
+    const passcode = generatePasscode();
+
+    // Send the passcode to the driver via email
+    sendPasscodeToDriver(driverId, passcode);
+
+    res.status(200).json({ message: 'Passcode sent successfully' });
+});
+
+// Endpoint to verify the passcode and grant access to the external door
+app.post('/verify-passcode', checkRole, async (req, res) => {
+    const driverId = req.body.driverId;
+    const passcode = req.body.passcode;
+
+    try {
+        if (await isValidPasscode(driverId, passcode)) {
+            // Grant access to the external door
+            grantAccessToDoor(driverId);
+            res.status(200).json({ message: 'Access granted' });
+        } else {
+            res.status(403).json({ message: 'Invalid passcode' });
+        }
+    } catch (error) {
+        console.error('Error verifying passcode:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+// Function to verify the passcode
+async function isValidPasscode(driverId, passcode) {
+    try {
+        // Query the Passcode collection to find a matching entry
+        const passcodeEntry = await Passcode.findOne({ driverId, passcode });
+        
+        // If passcodeEntry is not null, it means a matching entry was found
+        return passcodeEntry !== null;
+    } catch (error) {
+        console.error('Error checking passcode:', error);
+        throw error;
+    }
+}
+
+// Function to grant access to the external door
+function grantAccessToDoor(driverId) {
+    console.log(`Granting access to the external door for driver ID: ${driverId}`);
+}
+
 //add item to fridge
-app.post('/order', async (req, res) => {
+app.post('/order', checkRole, async (req, res) => {
     const { username, role, orderItemName, orderQuantity } = req.body;
 
     const user = username;
@@ -117,7 +255,8 @@ app.post('/order', async (req, res) => {
             name: orderItemName,
             quantity: orderQuantity,
             username: user,
-            role: userRole
+            role: userRole,
+            passcode: generatePasscode()
         });
 
         await newItem.save();
@@ -136,7 +275,7 @@ app.post('/order', async (req, res) => {
     }
 });
 
-app.patch('/fridge', async (req, res) => {
+app.patch('/fridge', checkRole, async (req, res) => {
     const { itemId, removeQuantity } = req.body;
 
     try {
@@ -215,6 +354,42 @@ app.get('/order', async (req, res) => {
     }
 });
 
+
+  //delivery screen
+  app.get('/delivery', (req,res) => {
+    Delivery.find({}, (err, deliveries) =>{
+        if (err){
+            return res.status(500).send(err);
+        }
+
+    res.render('delivery',{
+        deliveries: deliveries
+    });
+    });
+  });
+
+  const order = await Delivery.findById(orderId);
+
+  app.post('/log-damaged-missing-item', async (req, res) => {
+    try {
+        const { itemId, description, userId } = req.body;
+        const itemLog = new DamagedMissingItem({ itemId, description, userId });
+        await itemLog.save();
+        res.status(201).send(itemLog);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+app.post('/delivery-report', async (req, res) => {
+    try {
+        const { deliveryId, driverId, status, comments } = req.body;
+        const deliveryReport = new DeliveryReport({ deliveryId, driverId, status, comments });
+        await deliveryReport.save();
+        res.status(201).send(deliveryReport);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
 //update the fridge items
 app.patch('/fridge/:id', async (req, res) => {
     const updates = Object.keys(req.body);
