@@ -71,6 +71,34 @@ app.get('/logout', (req, res) => {
     });
 });
 
+const randomOrgAPIKey = "98abdc56-e679-4f8f-9667-5c2abfe4d401";
+
+async function generateRandomID() {
+    try {
+      const response = await axios.post("https://api.random.org/json-rpc/2/invoke", {
+            jsonrpc: "2.0",
+            method: "generateIntegers",
+            params: {
+              apiKey: randomOrgAPIKey,
+              n: 1, // number of integers to generate
+              min: 1,
+              max: 10000000,
+              replacement: false,
+            },
+            id: 42,
+        },
+    );
+
+      console.log("Random.org API Response:", response.data);
+  
+      const randomID = response.data.result.random.data[0];
+      return randomID;
+    } catch (error) {
+        console.error("Error generating random ID:", error);
+        throw error;
+    }
+}
+
 //add item to fridge
 app.post('/order', async (req, res) => {
     const { username, role, orderItemName, orderQuantity } = req.body;
@@ -80,7 +108,12 @@ app.post('/order', async (req, res) => {
     
     try {
 
+        do {
+            randomID = await generateRandomID();
+        } while (await fridgeItem.findOne({ itemId: randomID }));
+
         const newItem = new fridgeItem({
+            itemId: randomID,
             name: orderItemName,
             quantity: orderQuantity,
             username: user,
@@ -91,6 +124,7 @@ app.post('/order', async (req, res) => {
 
         res.json({
             status: "orderplaced",
+            itemId: randomID,
             item: orderItemName,
             quantity: orderQuantity,
             username: user,
@@ -148,7 +182,20 @@ app.delete('/fridge', async (req, res) => {
 app.get('/fridge', async (req, res) => {
     try {
         const items = await fridgeItem.find()
+            // orders by expiry date
             .sort({expiryDate: +1});
+
+        res.send(items);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+app.get('/order', async (req, res) => {
+    try {
+        const items = await fridgeItem.find()
+            // orders by newest created
+            .sort({createdAt: -1});
 
         res.send(items);
     } catch (err) {

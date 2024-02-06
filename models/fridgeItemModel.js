@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const fridgeItemSchema = new mongoose.Schema({
+    itemId: {
+        type: Number
+    },
     name:{
         type: String
     },

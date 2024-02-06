@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import './App.css';
+import { get } from 'mongoose';
 
 const Order = () => {
     const username = localStorage.getItem('username');
@@ -8,6 +9,19 @@ const Order = () => {
     const [orderItemName, setOrderItemName] = useState('');
     const [orderQuantity, setOrderQuantity] = useState(1);
     const [orderData, setOrderData] = useState([]);
+
+    async function getOrderData() {
+        try {
+            const orderResponse = await axios.get("http://localhost:5000/order")
+            setOrderData(orderResponse.data);
+        } catch (error) {
+            console.error("Problem fetching order data", error)
+        }
+    }
+
+    useEffect(() => {
+        getOrderData();
+    }, []);
     
 
     async function submit(e) {
@@ -48,6 +62,23 @@ const Order = () => {
             </form>
 
             <h2>Order history</h2>
+
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                </tr>
+                {orderData.map((item) => (
+                    <tr key={item.itemId}>
+                        <td>{item.name}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.username}</td>
+                        <td>{item.role}</td>
+                    </tr>
+                ))}
+            </table>
         </div>
     )
 }
