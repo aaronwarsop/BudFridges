@@ -7,12 +7,18 @@ const Fridge = () => {
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
     const [fridgeData, setFridgeData] = useState([]);
-    const [removeQuantity, setRemoveQuantity] = useState(1);
+    const [removeQuantities, setRemoveQuantities] = useState({});
 
     async function getFridgeData() {
         try {
             const fridgeResponse = await axios.get("http://localhost:5000/fridge")
             setFridgeData(fridgeResponse.data);
+
+            const initialQuantities = {};
+            fridgeResponse.data.forEach(item => {
+                initialQuantities[item.itemId] = 1;
+            });
+            setRemoveQuantities(initialQuantities);
         } catch (error) {
             console.error("Problem fetching fridge data", error);
         }
@@ -22,12 +28,16 @@ const Fridge = () => {
         getFridgeData();
     }, []);
 
-    async function remove(e, itemId, removeQuantity) {
+    async function remove(e, itemId) {
         e.preventDefault();
         try {
-            await axios.patch("http://localhost:5000/fridge", {
-                removeQuantity, itemId
-            })
+
+            const item = fridgeData.find(item => item.itemId === itemId);
+
+            if (item.quantity > removeQuantities[itemId]) {
+                await axios.patch("http://localhost:5000/fridge", {
+                removeQuantities: removeQuantities[itemId], itemId: itemId
+                })
             .then(res => {
                 if (res.data.status === "quantityremoved") {
                     alert("Quantity removed")
@@ -40,9 +50,19 @@ const Fridge = () => {
                     alert("Quantity not removed")
                 }
             })
+            }
+            else if (item.quantity - removeQuantities[itemId] === 0) {
+                await axios.delete(`http://localhost:5000/fridge/${itemId}`)
+            .then(res => {
+                if (res.data.status === "itemdeleted") {
+                    alert("Item deleted")
+                    getFridgeData();
+                }
+            })  
+            }  
         } catch (error) {
             alert("Error removing item quantity from fridge")
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -62,10 +82,21 @@ const Fridge = () => {
                         <td>{item.quantity}</td>
                         <td>{item.expiryDate}</td>
                         <td>
-                            <input type="number" min="1" value={removeQuantity} onChange={(e) => setRemoveQuantity(e.target.value)}></input>
+                            <input 
+                            type="number" 
+                            min="1" 
+                            value={removeQuantities[item.itemId]} 
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value);
+                                setRemoveQuantities(prevState => ({
+                                    ...prevState,
+                                    [item.itemId]: value
+                                }));
+                            }}    
+                            />
                         </td>
                         <td>
-                            <button type='submit' onClick={(e) => remove(e, item.itemId, removeQuantity)}>Remove</button>
+                            <button type='submit' onClick={(e) => remove(e, item.itemId, removeQuantities[item.itemId])}>Remove</button>
                         </td>
                     </tr>
                 ))}

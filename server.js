@@ -137,18 +137,23 @@ app.post('/order', async (req, res) => {
 });
 
 app.patch('/fridge', async (req, res) => {
-    const { itemId, removeQuantity } = req.body;
+    const { itemId, removeQuantities } = req.body;
 
     try {
         const item = await fridgeItem.findOne({itemId:itemId});
 
-        if (item.quantity < removeQuantity) {
+        if (!item) {
+            res.json({
+                status:"quantitynotremoved"
+            })
+         }
+        else if (item.quantity < removeQuantities) {
             res.json("removequantityexceeds")
         }
-        if (item && item.quantity >= removeQuantity) {
+        else if (item && item.quantity >= removeQuantities) {
             const updateQuantity = await fridgeItem.findOneAndUpdate(
                 {itemId:itemId}, 
-                {$inc: {quantity: - removeQuantity}}, 
+                {$inc: {quantity: - removeQuantities}}, 
                 {new: true}
             );
 
@@ -157,15 +162,6 @@ app.patch('/fridge', async (req, res) => {
                 updateQuantity
             });
         }
-        if (item.quantity === 0) {
-            fridgeItem.deleteMany({itemId:itemId})
-            res.json("quantityremoved")
-        }
-         else {
-            res.json({
-                status:"quantitynotremoved"
-            })
-         }
     } catch (err) {
         console.error(err)
         res.status(500).send(err);
@@ -173,17 +169,20 @@ app.patch('/fridge', async (req, res) => {
 });
 
 //delete item from fridge
-app.delete('/fridge', async (req, res) => {
-    const { name, quantity } = req.body;
+app.delete('/fridge/:itemId', async (req, res) => {
+    const { itemId } = req.params;
 
     try {
-        const item = await fridgeItem.findByIdAndDelete(req.params.id);
+        const item = await fridgeItem.deleteMany({itemId:itemId});
 
         if (!item) {
             res.status(404).send('Item not found');
         }
         else {
-            res.status(200).send(item);
+            await fridgeItem.deleteMany({itemId:itemId})
+            res.json({
+                status:"itemdeleted"
+            })
         }
     } catch (err) {
         res.status(500).send(err);
