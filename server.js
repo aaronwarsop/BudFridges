@@ -136,26 +136,32 @@ app.post('/order', async (req, res) => {
     }
 });
 
-app.patch('/fridge/:id', async (req, res) => {
-    const {itemName} = req.params;
-    const {removeQuantity} = req.body;
+app.patch('/fridge', async (req, res) => {
+    const { itemId, removeQuantity } = req.body;
 
     try {
-        const item = await fridgeItem.findOne({name:itemName});
+        const item = await fridgeItem.findOne({itemId:itemId});
 
-         if (!item) {
-            res.status(404).send('Item not found');
+        if (item.quantity < removeQuantity) {
+            res.json("removequantityexceeds")
          }
+         if (item && item.quantity >= removeQuantity) {
+            const updateQuantity = await fridgeItem.findOneAndUpdate(
+                {itemId:itemId}, 
+                {$inc: {quantity: - removeQuantity}}, 
+                {new: true}
+            );
 
-         if (item.quantity < removeQuantity) {
-            res.status(400).send('Quantity exceeds the amount in the fridge');
+            res.json({
+                status:"quantityremoved",
+                updateQuantity
+            });
          }
          else {
-            item.quantity -= removeQuantity;
-            await item.save();
-            res.json("quantityremoved")
+            res.json("quantitynotremoved")
          }
     } catch (err) {
+        console.error(err)
         res.status(500).send(err);
     }
 });

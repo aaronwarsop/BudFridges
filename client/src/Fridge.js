@@ -22,18 +22,21 @@ const Fridge = () => {
         getFridgeData();
     }, []);
 
-    async function remove(e, name, removeQuantity) {
+    async function remove(e, itemId, removeQuantity) {
         e.preventDefault();
         try {
-            await axios.patch(`http://localhost:5000/fridge/${name}`, {
-                removeQuantity
+            await axios.patch("http://localhost:5000/fridge", {
+                removeQuantity, itemId
             })
             .then(res => {
-                if (res.data === "quantityremoved") {
+                if (res.data.status === "quantityremoved") {
                     alert("Quantity removed")
                     getFridgeData();
                 }
-                else if(res.data === "itemnotremoved") {
+                else if (res.data === "removequantityexceeds") {
+                    alert("Remove quantity exceeds item quantity in fridge")
+                }
+                else if (res.data === "quantitynotremoved") {
                     alert("Quantity not removed")
                 }
             })
@@ -54,7 +57,7 @@ const Fridge = () => {
                     <th>Expiry Date</th>
                 </tr>
                 {fridgeData.map((item) => (
-                    <tr key={item.name}>
+                    <tr key={item.itemId}>
                         <td>{item.name}</td>
                         <td>{item.quantity}</td>
                         <td>{item.expiryDate}</td>
@@ -62,7 +65,7 @@ const Fridge = () => {
                             <input type="number" min="1" value={removeQuantity} onChange={(e) => setRemoveQuantity(e.target.value)}></input>
                         </td>
                         <td>
-                            <button type='button' onClick={(e => remove(e, item.name, removeQuantity))}>Remove</button>
+                            <button type='submit' onClick={(e) => remove(e, item.itemId, removeQuantity)}>Remove</button>
                         </td>
                     </tr>
                 ))}
