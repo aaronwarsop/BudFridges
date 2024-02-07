@@ -11,7 +11,7 @@ const fridgeItemSchema = new mongoose.Schema({
         type: Number
     },
     expiryDate: {
-        type: Date
+        type: String
     },
     username: {
         type: String

@@ -63,19 +63,23 @@ const Order = () => {
 
             <table>
                 <tr>
+                    <th>Order ID</th>
                     <th>Item</th>
                     <th>Quantity</th>
+                    <th>Expiry Date</th>
                     <th>Username</th>
                     <th>Role</th>
                     <th>Created</th>
                 </tr>
                 {orderData.map((item) => (
-                    <tr key={item.itemId}>
+                    <tr key={item.orderId}>
+                        <td>{item.orderId}</td>
                         <td>{item.name}</td>
                         <td>{item.quantity}</td>
+                        <td>{item.expiryDate}</td>
                         <td>{item.username}</td>
                         <td>{item.role}</td>
-                        <td>{item.createdAt}</td>
+                        <td>{new Date(item.createdAt).toLocaleString('default', {year: 'numeric', month:'long', day:'numeric'})}</td>
                     </tr>
                 ))}
             </table>

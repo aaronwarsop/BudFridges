@@ -96,12 +96,14 @@ const Fridge = () => {
             
             <table>
                 <tr>
+                    <th>ID</th>
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Expiry Date</th>
                 </tr>
                 {fridgeData.map((item) => (
                     <tr key={item.itemId}>
+                        <td>{item.itemId}</td>
                         <td>{item.name}</td>
                         <td>{item.quantity}</td>
                         <td>{item.expiryDate}</td>

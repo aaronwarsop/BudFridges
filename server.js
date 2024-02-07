@@ -251,12 +251,19 @@ app.post('/order', checkRole, async (req, res) => {
             randomID = await generateRandomID();
         } while (await orderItem.findOne({ orderId: randomID }));
 
+        expiry = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000));
+
         const newOrder = new orderItem({
             orderId: randomID,
             name: orderItemName,
             quantity: orderQuantity,
             username: user,
-            role: userRole
+            role: userRole,
+            expiryDate: expiry.toLocaleDateString({
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
         });
 
         await newOrder.save();
@@ -274,7 +281,12 @@ app.post('/order', checkRole, async (req, res) => {
             quantity: orderQuantity,
             username: user,
             role: userRole,
-            passcode: generatePasscode()
+            passcode: generatePasscode(),
+            expiryDate: expiry.toLocaleDateString({
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
         });
         
         await newItem.save();

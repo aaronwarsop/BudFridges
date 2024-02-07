@@ -11,7 +11,7 @@ const orderItemSchema = new mongoose.Schema({
         type: Number
     },
     expiryDate: {
-        type: Date
+        type: String
     },
     username: {
         type: String
