@@ -12,13 +12,31 @@ const Fridge = () => {
     async function getFridgeData() {
         try {
             const fridgeResponse = await axios.get("http://localhost:5000/fridge")
-            setFridgeData(fridgeResponse.data);
+            const fridgeData = fridgeResponse.data;
+            setFridgeData(fridgeData);
 
             const initialQuantities = {};
-            fridgeResponse.data.forEach(item => {
+            fridgeData.forEach(item => {
                 initialQuantities[item.itemId] = 1;
             });
             setRemoveQuantities(initialQuantities);
+
+            // automatic ordering
+            fridgeData.forEach(async item => {
+                if (item.quantity < 5) {
+                    const updateData = {
+                        quantity: item.quantity + 50,
+                        expiryDate: item.expiryDate
+                    }
+
+                    try {
+                        await axios.patch(`http://localhost:5000/fridge/${item.itemId}`, updateData)
+                        console.log(`Item ${item.name} quantity updated.`)
+                    } catch (error) {
+                        console.error("Problem updating item quantity", error);
+                    }
+                }
+            })
         } catch (error) {
             console.error("Problem fetching fridge data", error);
         }
@@ -26,6 +44,12 @@ const Fridge = () => {
     
     useEffect(() => {
         getFridgeData();
+
+        const interval = setInterval(() => {
+            getFridgeData();
+        }, 10000);
+
+        return () => clearInterval(interval);
     }, []);
 
     async function remove(e, itemId) {
