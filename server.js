@@ -249,10 +249,6 @@ app.post('/order', checkRole, async (req, res) => {
 
         do {
             randomID = await generateRandomID();
-        } while (await fridgeItem.findOne({ itemId: randomID }));
-
-        do {
-            randomID = await generateRandomID();
         } while (await orderItem.findOne({ orderId: randomID }));
 
         const newOrder = new orderItem({
@@ -272,25 +268,29 @@ app.post('/order', checkRole, async (req, res) => {
             await itemExists.save();
             return res.json("itemexists");
         } else {
-                const newItem = new fridgeItem({
-                    itemId: randomID,
-                    name: orderItemName,
-                    quantity: orderQuantity,
-                    username: user,
-                    role: userRole,
-                    passcode: generatePasscode()
-                });
+            do {
+                randomID = await generateRandomID();
+            } while (await fridgeItem.findOne({ itemId: randomID }));
+
+            const newItem = new fridgeItem({
+                itemId: randomID,
+                name: orderItemName,
+                quantity: orderQuantity,
+                username: user,
+                role: userRole,
+                passcode: generatePasscode()
+            });
         
-                await newItem.save();
+            await newItem.save();
         
-                res.json({
-                    status: "orderplaced",
-                    itemId: randomID,
-                    item: orderItemName,
-                    quantity: orderQuantity,
-                    username: user,
-                    role: userRole
-                });
+            res.json({
+                status: "orderplaced",
+                itemId: randomID,
+                item: orderItemName,
+                quantity: orderQuantity,
+                username: user,
+                role: userRole
+            });
         }
     } catch (err) {
         res.json("ordernotplaced");
