@@ -8,6 +8,7 @@ const Fridge = () => {
     const role = localStorage.getItem('role');
     const [fridgeData, setFridgeData] = useState([]);
     const [removeQuantities, setRemoveQuantities] = useState({});
+    const [activityData, setActivityData] = useState([]);
 
     async function getFridgeData() {
         try {
@@ -41,9 +42,20 @@ const Fridge = () => {
             console.error("Problem fetching fridge data", error);
         }
     }
+
+    async function getActivityData() {
+        try {
+            const activityResponse = await axios.get("http://localhost:5000/activity")
+            const activityData = activityResponse.data;
+            setActivityData(activityData);
+        } catch (error) {
+            
+        }
+    }
     
     useEffect(() => {
         getFridgeData();
+        getActivityData();
 
         const interval = setInterval(() => {
             getFridgeData();
@@ -76,7 +88,9 @@ const Fridge = () => {
             })
             }
             else if (item.quantity - removeQuantities[itemId] === 0) {
-                await axios.delete(`http://localhost:5000/fridge/${itemId}`)
+                await axios.delete(`http://localhost:5000/fridge/${itemId}`, {
+                    removeQuantities: removeQuantities[itemId]
+                })
             .then(res => {
                 if (res.data.status === "itemdeleted") {
                     alert("Item deleted")
@@ -129,6 +143,25 @@ const Fridge = () => {
             </table>
 
             <h2>Fridge Activity</h2>
+
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Expiry Date</th>
+                </tr>
+                {activityData.map((item) => (
+                    <tr key={item.itemId}>
+                        <td>{item.status}</td>
+                        <td>{item.itemId}</td>
+                        <td>{item.name}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.expiryDate}</td>
+                    </tr>
+                ))}
+            </table>
         </div>
     )
 

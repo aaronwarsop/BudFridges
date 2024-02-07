@@ -19,6 +19,7 @@ const Delivery = require('./models/deliveryModel');
 const DamagedItem = require('./models/damagedItemModel');
 const DeliveryReport = require("./models/deliveryReportModel");
 const orderItem = require("./models/orderModel");
+const activity = require("./models/activityModel");
 
 //register section
 app.post('/register', async (req, res) => {
@@ -115,10 +116,20 @@ function checkRole(req, res, next) {
       } else {
         res.status(403).send('Access Denied'); 
       }
+    } else if (req.body.role === 'head chef') {
+        if(req.path === '/HealthandSafetyReport') {
+            next();
+        } else {
+            res.status(403).send('Access Denied'); 
+        }
     } else {
-      next(); 
+        next();
     }
-  }
+}
+
+app.get('/healthandsafetyreport', checkRole, async (req, res) => {
+
+});
 
   //random passcode for fridge
   function generatePasscode() {
@@ -288,8 +299,25 @@ app.post('/order', checkRole, async (req, res) => {
                 day: 'numeric'
             })
         });
-        
+
         await newItem.save();
+
+        const newActivity = new activity({
+            status: "added",
+            orderId: randomID,
+            itemId: randomID,
+            name: orderItemName,
+            quantity: orderQuantity,
+            username: user,
+            role: userRole,
+            expiryDate: expiry.toLocaleDateString({
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
+        });
+        
+        await newActivity.save();
         
         res.json({
             status: "orderplaced",
@@ -320,6 +348,19 @@ app.patch('/fridge', checkRole, async (req, res) => {
             res.json("removequantityexceeds")
         }
         else if (item && item.quantity >= removeQuantities) {
+
+            const newActivity = new activity({
+                status: "quantity removed",
+                itemId: itemId,
+                name: item.name,
+                quantity: removeQuantities,
+                username: item.username,
+                role: item.role,
+                expiryDate: item.expiryDate
+            });
+            
+            await newActivity.save();
+
             const updateQuantity = await fridgeItem.findOneAndUpdate(
                 {itemId:itemId}, 
                 {$inc: {quantity: - removeQuantities}}, 
@@ -339,7 +380,7 @@ app.patch('/fridge', checkRole, async (req, res) => {
 
 //delete item from fridge
 app.delete('/fridge/:itemId', checkRole, async (req, res) => {
-    const { itemId } = req.params;
+    const { itemId, removeQuantities } = req.params;
 
     try {
         const item = await fridgeItem.deleteMany({itemId:itemId});
@@ -348,6 +389,19 @@ app.delete('/fridge/:itemId', checkRole, async (req, res) => {
             res.status(404).send('Item not found');
         }
         else {
+
+            const newActivity = new activity({
+                status: "deleted",
+                itemId: itemId,
+                name: item.name,
+                quantity: removeQuantities,
+                username: item.username,
+                role: item.role,
+                expiryDate: item.expiryDate
+            });
+
+            await newActivity.save();
+
             await fridgeItem.deleteMany({itemId:itemId})
             res.json({
                 status:"itemdeleted"
@@ -384,6 +438,20 @@ app.get('/order', checkRole, async (req, res) => {
         }
     } catch (err) {
         res.status(500).send(err);
+    }
+});
+
+app.get('/activity', checkRole, async (req, res) => {
+    try {
+        const activityData = await activity.find()
+            .sort({createdAt: -1});
+        if (activityData.length > 0) {
+            res.send(activityData);
+        } else {
+            res.status(404).send('No activity found');
+        }
+    } catch (error) {
+        
     }
 });
 

@@ -7,6 +7,7 @@ import Login from './Login';
 import Register from './Register';
 import Order from './Order';
 import Driver from './Driver';
+import HealthandSafetyReport from './HealthandSafetyReport';
 
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
           <Route index element={<Fridge/>}/>
           <Route path="Fridge" element={<Fridge/>}/>
           <Route path="Order" element={<Order/>}/>
+          <Route path="HealthandSafetyReport" element={<HealthandSafetyReport/>}/>
         </Route>
         <Route path="Register" element={<Register/>}/>
         <Route path="Login" element={<Login/>}/>
