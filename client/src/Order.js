@@ -28,7 +28,7 @@ const Order = () => {
 
         try {
             await axios.post("http://localhost:5000/order", {
-                username, role, orderItemName, orderQuantity
+                username, role, orderItemName, orderQuantity: parseInt(orderQuantity)
             })
             .then(res => {
                 if (res.data.status === "orderplaced") {
