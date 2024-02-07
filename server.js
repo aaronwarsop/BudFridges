@@ -18,6 +18,7 @@ const Passcode = require('./models/Passcode');
 const Delivery = require('./models/deliveryModel');
 const DamagedItem = require('./models/damagedItemModel');
 const DeliveryReport = require("./models/deliveryReportModel");
+const orderItem = require("./models/orderModel");
 
 //register section
 app.post('/register', async (req, res) => {
@@ -237,7 +238,7 @@ function grantAccessToDoor(driverId) {
     console.log(`Granting access to the external door for driver ID: ${driverId}`);
 }
 
-//add item to fridge
+// places order and adds item to fridge
 app.post('/order', checkRole, async (req, res) => {
     const { username, role, orderItemName, orderQuantity } = req.body;
 
@@ -246,6 +247,24 @@ app.post('/order', checkRole, async (req, res) => {
     
     try {
 
+        do {
+            randomID = await generateRandomID();
+        } while (await fridgeItem.findOne({ itemId: randomID }));
+
+        do {
+            randomID = await generateRandomID();
+        } while (await orderItem.findOne({ orderId: randomID }));
+
+        const newOrder = new orderItem({
+            orderId: randomID,
+            name: orderItemName,
+            quantity: orderQuantity,
+            username: user,
+            role: userRole
+        });
+
+        await newOrder.save();
+
         itemExists = await fridgeItem.findOne({name: orderItemName});
 
         if (itemExists) {
@@ -253,10 +272,6 @@ app.post('/order', checkRole, async (req, res) => {
             await itemExists.save();
             return res.json("itemexists");
         } else {
-            do {
-                randomID = await generateRandomID();
-            } while (await fridgeItem.findOne({ itemId: randomID }));
-    
                 const newItem = new fridgeItem({
                     itemId: randomID,
                     name: orderItemName,
@@ -316,7 +331,7 @@ app.patch('/fridge', checkRole, async (req, res) => {
 });
 
 //delete item from fridge
-app.delete('/fridge/:itemId', async (req, res) => {
+app.delete('/fridge/:itemId', checkRole, async (req, res) => {
     const { itemId } = req.params;
 
     try {
@@ -337,7 +352,7 @@ app.delete('/fridge/:itemId', async (req, res) => {
 });
 
 // Get all items in the fridge
-app.get('/fridge', async (req, res) => {
+app.get('/fridge', checkRole, async (req, res) => {
     try {
         const items = await fridgeItem.find()
             // orders by expiry date
@@ -349,13 +364,17 @@ app.get('/fridge', async (req, res) => {
     }
 });
 
-app.get('/order', async (req, res) => {
+app.get('/order', checkRole, async (req, res) => {
     try {
-        const items = await fridgeItem.find()
+        const items = await orderItem.find()
             // orders by newest created
             .sort({createdAt: -1});
 
-        res.send(items);
+        if (items.length > 0) {
+            res.send(items);
+        } else {
+            res.status(404).send('No items found');
+        }
     } catch (err) {
         res.status(500).send(err);
     }

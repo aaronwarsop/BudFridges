@@ -7,7 +7,7 @@ const Order = () => {
     const role = localStorage.getItem('role');
     const [orderData, setOrderData] = useState([]);
     const [orderItemName, setOrderItemName] = useState('');
-    const [orderQuantity, setOrderQuantity] = useState(1);
+    const [orderQuantity, setOrderQuantity] = useState('');
 
     async function getOrderData() {
         try {
@@ -17,11 +17,6 @@ const Order = () => {
             console.error("Problem fetching order data", error)
         }
     }
-
-    useEffect(() => {
-        getOrderData();
-    }, []);
-    
 
     async function submit(e) {
         e.preventDefault();
@@ -43,6 +38,10 @@ const Order = () => {
             
         }
     }
+
+    useEffect(() => {
+        getOrderData();
+    }, []);
 
     return (
         <div>
@@ -68,6 +67,7 @@ const Order = () => {
                     <th>Quantity</th>
                     <th>Username</th>
                     <th>Role</th>
+                    <th>Created</th>
                 </tr>
                 {orderData.map((item) => (
                     <tr key={item.itemId}>
@@ -75,6 +75,7 @@ const Order = () => {
                         <td>{item.quantity}</td>
                         <td>{item.username}</td>
                         <td>{item.role}</td>
+                        <td>{item.createdAt}</td>
                     </tr>
                 ))}
             </table>
