@@ -48,7 +48,7 @@ const Driver = () => {
   }
 
   return (
-    <div>
+    <div className="driver-container">
       <h1>Driver Access</h1>
       
       {passcode && 

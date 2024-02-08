@@ -33,7 +33,7 @@ const SendEmail = () => {
     };
 
     return (
-        <div>
+        <div className="email-container">
             <h2>Send Email</h2>
             {message && <p>{message}</p>}
             {error && <p>{error}</p>}

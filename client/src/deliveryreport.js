@@ -21,7 +21,7 @@ const DeliveryReport = () => {
     };
   
     return (
-      <div>
+      <div className="delivery-report-container">
         <h2>Delivery Report</h2>
         <label>
           Delivery ID:
