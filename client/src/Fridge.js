@@ -149,6 +149,9 @@ const Fridge = () => {
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Expiry Date</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>When</th>
                 </tr>
                 {activityData.map((item) => (
                     <tr key={item.itemId}>
@@ -157,6 +160,9 @@ const Fridge = () => {
                         <td>{item.name}</td>
                         <td>{item.quantity}</td>
                         <td>{item.expiryDate}</td>
+                        <td>{item.username}</td>
+                        <td>{item.role}</td>
+                        <td>{new Date(item.createdAt).toLocaleString('default', {year: 'numeric', month:'long', day:'numeric'})}</td>
                     </tr>
                 ))}
             </table>
