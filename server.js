@@ -20,6 +20,7 @@ const DamagedItem = require('./models/damagedItemModel');
 const DeliveryReport = require("./models/deliveryReportModel");
 const orderItem = require("./models/orderModel");
 const activity = require("./models/activityModel");
+const healthAndSafetyReportItem = require("./models/healthAndSafetyReportModel");
 
 //register section
 app.post('/register', async (req, res) => {
@@ -454,6 +455,24 @@ app.get('/activity', checkRole, async (req, res) => {
         }
     } catch (error) {
         
+    }
+});
+
+app.post("/healthandsafetyreport", async (req, res) => {
+    const { username, role, reportTitle, reportInformation } = req.body;
+
+    try {
+        const newReport = new healthAndSafetyReportItem({
+            username: username,
+            role: role,
+            reportTitle: reportTitle,
+            reportInformation: reportInformation
+        });
+
+        await newReport.save();
+        res.json({status: "healthandsafetyreportcreated"});
+    } catch (error) {
+        res.json("healthandsafetyreportnotcreated");
     }
 });
 

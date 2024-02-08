@@ -8,6 +8,7 @@ const Register = () => {
     const history = useNavigate();
 
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
 
@@ -16,7 +17,7 @@ const Register = () => {
         
         try {
             await axios.post("http://localhost:5000/register", {
-                username, password, role
+                username, password, role, email
             })
             .then(res => {
                 if (res.data === "userexists") {
@@ -48,8 +49,12 @@ const Register = () => {
                         <div className='formItem1'>
                             <input type="username" onChange={(e) =>{setUsername(e.target.value)}} name="" placeholder="Username"/>
                         </div>
-                        
+
                         <div className='formItem2'>
+                            <input type="email" onChange={(e) =>{setEmail(e.target.value)}} name="" placeholder="Email"/>
+                        </div>
+                        
+                        <div className='formItem3'>
                             <input type="password" onChange={(e) =>{setPassword(e.target.value)}} name="" placeholder="Password"/>
                         </div>
 

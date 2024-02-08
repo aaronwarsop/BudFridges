@@ -6,6 +6,8 @@ const HealthandSafetyReport = () => {
 
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
+    const [reportTitle, setReportTitle] = useState('');
+    const [reportInformation, setReportInformation] = useState('');
 
     useEffect(() => {
         async function getHealthandSafetyReport() {
@@ -19,9 +21,42 @@ const HealthandSafetyReport = () => {
         getHealthandSafetyReport();
     }, []);
 
+    async function submit(e) {
+        e.preventDefault();
+
+        try {
+            await axios.post("http://localhost:5000/healthandsafetyreport", {
+                username, role, reportTitle, reportInformation
+            })
+            .then(res => {
+                if (res.data.status === "healthandsafetyreportcreated") {
+                    alert("Health and Safety Report created")
+                }
+                else if (res.data === "healthandsafetyreportnotcreated") {
+                    alert("Problem creating Health and Safety Report")
+                }
+            })
+        } catch (error) {
+            
+        }
+    }
+
     return (
         <div>
             <h1>Health and Safety Report</h1>
+
+            <form action='POST'>
+                <div className='formItem1'>
+                    <input type="text" name="" placeholder="Report Title" onChange={(e) => {setReportTitle(e.target.value)}}/>
+                </div>
+                <div className='formItem2'>
+                    <p>Gerald make report info section bigger with css pls</p>
+                    <input type="text" name="" placeholder="Report Information" onChange={(e) => {setReportInformation(e.target.value)}}/>
+                </div>
+                <div className='formItem3'>
+                    <input type="submit" onClick={submit}/>
+                </div>
+            </form>
         </div>
     )
 
