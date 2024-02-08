@@ -24,6 +24,7 @@ const Login = () => {
                     const role = res.data.role;
                     localStorage.setItem("role", role)
                     history("/", {state:{id:username}});
+                    window.location.reload();
                 }
                 else if (res.data === "Invalid username or password") {
                     alert("Invalid login credentials")
