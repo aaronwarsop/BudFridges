@@ -88,9 +88,7 @@ const Fridge = () => {
             })
             }
             else if (item.quantity - removeQuantities[itemId] === 0) {
-                await axios.delete(`http://localhost:5000/fridge/${itemId}`, {
-                    removeQuantities: removeQuantities[itemId]
-                })
+                await axios.delete(`http://localhost:5000/fridge/${itemId}`)
             .then(res => {
                 if (res.data.status === "itemdeleted") {
                     alert("Item deleted")
@@ -142,7 +140,7 @@ const Fridge = () => {
                 ))}
             </table>
 
-            <h2>Fridge Activity</h2>
+            <h1>Fridge Activity</h1>
 
             <table>
                 <tr>

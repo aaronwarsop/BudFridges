@@ -17,7 +17,7 @@ const Layout = () => {
                 </nav>
 
                 <div className='userNav'>
-                    <ul> 
+                    <ul>
                         {username ? (
                             <>
                                 <li>{username}</li>

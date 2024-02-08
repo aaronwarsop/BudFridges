@@ -380,28 +380,30 @@ app.patch('/fridge', checkRole, async (req, res) => {
 
 //delete item from fridge
 app.delete('/fridge/:itemId', checkRole, async (req, res) => {
-    const { itemId, removeQuantities } = req.params;
+    const { itemId } = req.params;
 
     try {
-        const item = await fridgeItem.deleteMany({itemId:itemId});
 
-        if (!item) {
+        const item = await fridgeItem.findOne({itemId:itemId});
+
+        const newActivity = new activity({
+            status: "deleted",
+            itemId: itemId,
+            name: item.name,
+            quantity: item.quantity,
+            username: item.username,
+            role: item.role,
+            expiryDate: item.expiryDate
+        });
+
+        await newActivity.save();
+
+        const deleteItem = await fridgeItem.deleteMany({itemId:itemId});
+
+        if (!deleteItem) {
             res.status(404).send('Item not found');
         }
         else {
-
-            const newActivity = new activity({
-                status: "deleted",
-                itemId: itemId,
-                name: item.name,
-                quantity: removeQuantities,
-                username: item.username,
-                role: item.role,
-                expiryDate: item.expiryDate
-            });
-
-            await newActivity.save();
-
             await fridgeItem.deleteMany({itemId:itemId})
             res.json({
                 status:"itemdeleted"
