@@ -23,14 +23,13 @@ const Layout = () => {
                                 <>
                                     <li><Link to ="/Driver">Driver</Link></li>
                                     <li><Link to ="/Delivery">Delivery</Link></li>
-
+                                    
                                 </>
                             ) : (
                                 <>
                                     <li><Link to ="/">Fridge</Link></li>
                                     <li><Link to ="/Order">Place Order</Link></li>
-                                    <li><Link to ="/Driver">Driver</Link></li>
-                                    <li><Link to ="/Delivery">Delivery</Link></li>
+                                    
                                 </>
                             )}
                     </ul>

@@ -7,7 +7,7 @@ const DeliveryReport = () => {
   
     const handleReportDelivery = async () => {
       try {
-        const response = await axios.post('/delivery-report', {
+        const response = await axios.post('http://localhost:5000/delivery-report', {
           deliveryId,
           driverId,
           status,

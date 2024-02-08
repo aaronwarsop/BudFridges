@@ -24,10 +24,11 @@ const Register = () => {
                     alert("User already exists")
                 }
                 else if (res.data === "accountcreated") {
-                    history("/", {state:{id:username}});
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", role);
+                    history("/", {state:{id:username}});
                     alert("Account created")
+                    window.location.reload();
                 }
             })
             .catch (error => {

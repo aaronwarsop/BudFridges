@@ -34,7 +34,7 @@ app.post('/register', async (req, res) => {
             res.json('userexists');
         }
         else {
-            const user = new User({ username:username, password:password, role:role });
+            const user = new User({ username:username, password:password, role:role, email:email });
             await user.save();
             res.json("accountcreated");
         }
@@ -113,7 +113,7 @@ async function generateRandomID() {
 //check role  
 function checkRole(req, res, next) {
     if(req.body.role === 'driver') {
-      if(req.path === '/delivery' || req.path === '/requesting-access') {
+      if(req.path === '/delivery') {
         next();
       } else {
         res.status(403).send('Access Denied'); 
@@ -218,7 +218,7 @@ async function sendEmail(to, subject, text) {
 }
 
 // Endpoint to request access to the external door
-app.post('/requesting-access', checkRole, async (req, res) => {
+app.post('/requesting-access', checkRole, cors(), async (req, res) => {
     const driverId = req.body.userId;
 
     // Generate a passcode for the driver

@@ -9,7 +9,7 @@ const LogDamagedMissingItem = () => {
 
   const handleLogItem = async () => {
     try {
-      const response = await axios.post('/log-damaged-missing-item', {
+      const response = await axios.post('http://localhost:5000/log-damaged-missing-item', {
         itemId,
         description,
         userId
@@ -51,7 +51,7 @@ const DeliveryReport = () => {
 
   const handleReportDelivery = async () => {
     try {
-      const response = await axios.post('/delivery-report', {
+      const response = await axios.post('http://localhost:5000/delivery-report', {
         deliveryId,
         driverId,
         status,

@@ -1,6 +1,5 @@
 import React from 'react';
-import { createRoot } from 'react-dom';
-//import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './Layout';
 import Fridge from './Fridge';
@@ -40,8 +39,7 @@ export default function App() {
             <Route index element={<Fridge/>}/>
             <Route path="Fridge" element={<Fridge/>}/>
             <Route path="Order" element={<Order/>}/>
-            <Route path="Driver" element={<Driver/>}/>
-            <Route path="Delivery" element={<Delivery/>}/>
+            
           </Route>
         )}
         <Route path="Register" element={<Register/>}/>
@@ -51,7 +49,7 @@ export default function App() {
   );
 }
 
-const root = createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <App />

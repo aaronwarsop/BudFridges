@@ -10,12 +10,13 @@ const Driver = () => {
       const username = localStorage.getItem('username');
       
       try {
-        const response = await axios.post('/requesting-access', {
+        const response = await axios.post('http://localhost:5000/requesting-access', {
           userId: username
         });
         
         if (response.status === 200) {
           setPasscode(response.data.passcode);
+          
         } else {
           throw new Error('Failed to get passcode');
         }
@@ -28,10 +29,10 @@ const Driver = () => {
   }, []);
 
   const handleVerify = async () => {
-    const username = localStorage.getItem('username');
+    const username = localStorage.getItem('http://localhost:5000/username');
     
     try {
-      const response = await axios.post('/verify-passcode', {
+      const response = await axios.post('http://localhost:5000/verify-passcode', {
         driverId: username,
         passcode  
       });
