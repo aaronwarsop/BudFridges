@@ -4,15 +4,32 @@ import './App.css';
 const Layout = () => {
 
     const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
 
     return (
         <>
             <header>
                 <nav className='pageNav'>
                     <ul>
-                        <li><Link to ="/">Fridge</Link></li>
-                        <li><Link to ="/Order">Place Order</Link></li>
-                        <li><Link to ="/HealthandSafetyReport">Health and Safety Report</Link></li>
+                        {role === "head chef" ? (
+                            <>
+                                <li><Link to ="/">Fridge</Link></li>
+                                <li><Link to ="/Order">Place Order</Link></li>
+                                <li><Link to ="/HealthandSafetyReport">Health and Safety Report</Link></li>
+                            </>
+                            
+                            ) : role === "driver" ? (
+                                <>
+                                    <li><Link to ="/Driver">Driver</Link></li>
+                                    <li><Link to ="/Delivery">Delivery</Link></li>
+
+                                </>
+                            ) : (
+                                <>
+                                    <li><Link to ="/">Fridge</Link></li>
+                                    <li><Link to ="/Order">Place Order</Link></li>
+                                </>
+                            )}
                     </ul>
                 </nav>
 

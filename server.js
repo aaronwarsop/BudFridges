@@ -119,10 +119,11 @@ function checkRole(req, res, next) {
         res.status(403).send('Access Denied'); 
       }
     } else if (req.body.role === 'head chef') {
-        if(req.path === '/HealthandSafetyReport') {
+        if(req.path === '/healthandsafetyreport') {
             next();
         } else {
-            res.status(403).send('Access Denied'); 
+            res.status(403).send('Access Denied');
+            console.log(checkRole)
         }
     } else {
         next();
@@ -130,7 +131,7 @@ function checkRole(req, res, next) {
 }
 
 app.get('/healthandsafetyreport', checkRole, async (req, res) => {
-
+    
 });
 
   //random passcode for fridge
@@ -459,7 +460,7 @@ app.get('/activity', checkRole, async (req, res) => {
     }
 });
 
-app.post("/healthandsafetyreport", async (req, res) => {
+app.post("/healthandsafetyreport", checkRole, async (req, res) => {
     const { username, role, reportTitle, reportInformation } = req.body;
 
     try {

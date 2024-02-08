@@ -89,4 +89,4 @@ const DeliveryReport = () => {
   );
 };
 
-export { LogDamagedMissingItem, DeliveryReport };
+export default { LogDamagedMissingItem, DeliveryReport };
