@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(checkRole);
 
 const User = require("./models/userModel");
 const fridgeItem = require("./models/fridgeItemModel");
