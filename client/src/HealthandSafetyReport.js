@@ -42,7 +42,7 @@ const HealthandSafetyReport = () => {
     }
 
     return (
-        <div>
+        <div className="report-container">
             <h1>Health and Safety Report</h1>
 
             <form action='POST'>
@@ -51,7 +51,7 @@ const HealthandSafetyReport = () => {
                 </div>
                 <div className='formItem2'>
                     <p>Gerald make report info section bigger with css pls</p>
-                    <input type="text" name="" placeholder="Report Information" onChange={(e) => {setReportInformation(e.target.value)}}/>
+                    <textarea name="" placeholder="Report Information" onChange={(e) => {setReportInformation(e.target.value)}}></textarea>
                 </div>
                 <div className='formItem3'>
                     <input type="submit" onClick={submit}/>

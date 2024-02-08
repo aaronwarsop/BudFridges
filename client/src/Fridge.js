@@ -103,7 +103,7 @@ const Fridge = () => {
     }
 
     return (
-        <div>
+        <div className="box-container">
             <h1>Fridge</h1>
             
             <table>

@@ -44,7 +44,7 @@ const Order = () => {
     }, []);
 
     return (
-        <div>
+        <div className="box-container">
             <h2>Place Order</h2>
 
             <form action="POST">

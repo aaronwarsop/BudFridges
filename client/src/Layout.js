@@ -9,6 +9,7 @@ const Layout = () => {
     return (
         <>
             <header>
+                
                 <nav className='pageNav'>
                     <ul>
                         {role === "head chef" ? (
@@ -31,8 +32,9 @@ const Layout = () => {
                                 </>
                             )}
                     </ul>
+                    
                 </nav>
-
+                <div className="logo">FFSMART</div>
                 <div className='userNav'>
                     <ul>
                         {username ? (
