@@ -179,9 +179,26 @@ app.post('/send-email', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-// Function to send the passcode to the driver via email
-function sendPasscodeToDriver(driverId, passcode) {
-    // make getEmailById to fetch the driver's email from the database
+
+// Function to get email by user id
+async function getEmailById(driverId) {
+    try {
+        const driver = await User.findById(driverId);
+        if (driver) {
+            return driver.email;
+        } else {
+            console.error('Driver not found');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching email by id:', error);
+        throw error;
+    }
+}
+
+
+async function sendPasscodeToDriver(driverId, passcode) {
+    
     const driverEmail = getEmailById(driverId);
 
     if (!driverEmail) {
