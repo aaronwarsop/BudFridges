@@ -22,7 +22,7 @@ const LogDamagedMissingItem = () => {
   };
 
   return (
-    <div>
+    <div className="log-container">
       <h2>Log Damaged/Missing Item</h2>
       <label>
         Item ID:
@@ -65,7 +65,7 @@ const DeliveryReport = () => {
   };
 
   return (
-    <div>
+    <div className="log-container">
       <h2>Delivery Report</h2>
       <label>
         Delivery ID:

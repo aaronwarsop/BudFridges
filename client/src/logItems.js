@@ -22,7 +22,7 @@ const LogDamagedMissingItem = () => {
   };
 
   return (
-    <div>
+    <div className="item-container">
       <h2>Log Damaged/Missing Item</h2>
       <label>
         Item ID:

@@ -250,3 +250,331 @@ header {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
+
+
+/* Container styling for the driver content */
+.driver-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto; 
+    padding: 20px;
+    background-color: #ebe8e8;
+    width: 80%; 
+    max-width: 700px; 
+    font-family: "Dancing Script", cursive;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    height: auto;
+  }
+  
+  /* Styling for the headings */
+  .driver-container h1 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+ 
+  .driver-container p {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  /*  Verify Passcode button */
+  .driver-container button {
+    padding: 10px 20px;
+    background-color: #01a833;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .driver-container button:hover {
+    background-color: #008026;
+  }
+  
+
+  .delivery-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  width: 80%;
+  max-width: 700px;
+  font-family: "Dancing Script", cursive;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.delivery-container h1 {
+  margin-bottom: 20px;
+}
+
+.delivery-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.delivery-container li {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+/* delivery content */
+
+.delivery-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ebe8e8;
+    width: 80%;
+    max-width: 700px;
+    font-family: "Dancing Script", cursive;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  .delivery-container h1 {
+    margin-bottom: 20px;
+  }
+  
+  .delivery-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .delivery-container li {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+/*logandreport container */
+  .log-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ebe8e8;
+    width: 80%;
+    max-width: 700px;
+    font-family: "Dancing Script", cursive;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  .log-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .log-container label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .log-container input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .log-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #01a833;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .log-container button:hover {
+    background-color: #008026;
+  }
+  
+  .log-container div {
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+
+/* Email Container */
+.email-container {
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ebe8e8;
+    width: 80%;
+    max-width: 700px;
+    font-family: "Dancing Script", cursive;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.email-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.email-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.email-container label {
+    margin-bottom: 10px;
+}
+
+.email-container input[type="email"],
+.email-container input[type="text"],
+.email-container textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.email-container textarea {
+    height: 200px;
+    resize: vertical;
+}
+
+.email-container button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #01a833;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.email-container button[type="submit"]:hover {
+    background-color: #008026;
+}
+
+
+/* Delivery Report Container */
+.delivery-report-container {
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ebe8e8;
+    width: 80%;
+    max-width: 700px;
+    font-family: "Dancing Script", cursive;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.delivery-report-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.delivery-report-container label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.delivery-report-container input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.delivery-report-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #01a833;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.delivery-report-container button:hover {
+    background-color: #008026;
+}
+
+.delivery-report-container .response-message {
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Item Container */
+.item-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ebe8e8;
+    width: 80%;
+    max-width: 700px;
+    font-family: "Dancing Script", cursive;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.item-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.item-container label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.item-container input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.item-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #01a833;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.item-container button:hover {
+    background-color: #008026;
+}
+
+.item-container div {
+    margin-top: 10px;
+    text-align: center;
+}

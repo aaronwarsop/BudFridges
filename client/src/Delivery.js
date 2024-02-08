@@ -31,8 +31,9 @@ const DeliveryComponent = () => {
   }
 
   return (
-    <div>
+    <div className="delivery-container">
       <h1>Delivery List</h1>
+      {error && <div className="error-message">Error: {error}</div>}
       {deliveries.length === 0 ? (
         <div>No deliveries found</div>
       ) : (
