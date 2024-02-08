@@ -26,11 +26,11 @@ const LogDamagedMissingItem = () => {
       <h2>Log Damaged/Missing Item</h2>
       <label>
         Item ID:
-        <input type="text" value={itemId} onChange={(e) => setItemId(e.target.value)} />
+        <input type="text" value={itemId} onChange={(e) => setItemId(e.target.value)}/>
       </label>
       <label>
         Description:
-        <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <input type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
       </label>
       <label>
         User ID:
