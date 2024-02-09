@@ -20,10 +20,10 @@ const Login = () => {
             .then(res => {
                 // takes user to home page if response from server side returns user found
                 if (res.data.status === "userfound") {
-                    localStorage.setItem("username", username);
                     const role = res.data.role;
-                    localStorage.setItem("role", role)
-                    history("/", {state:{id:username}});
+                    localStorage.setItem("role", role);
+                    localStorage.setItem("username", username);
+                    history("/", {state:{id:role}});
                     window.location.reload();
                 }
                 else if (res.data === "Invalid username or password") {

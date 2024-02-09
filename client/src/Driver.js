@@ -4,6 +4,7 @@ import './App.css';
 
 const Driver = () => {
   const [passcode, setPasscode] = useState(null);
+  const role = localStorage.getItem('role');
 
   useEffect(() => {
     const getPasscode = async () => {

@@ -23,11 +23,13 @@ const Register = () => {
                 if (res.data === "userexists") {
                     alert("User already exists")
                 }
-                else if (res.data === "accountcreated") {
+                else if (res.data.status === "accountcreated") {
+                    const returnedRole = res.data.role;
+                    localStorage.setItem("role", returnedRole);
                     localStorage.setItem("username", username);
-                    localStorage.setItem("role", role);
-                    history("/", {state:{id:username}});
+                    window.location.reload();
                     alert("Account created")
+                    history("Driver", {state:{id:role}});
                     window.location.reload();
                 }
             })

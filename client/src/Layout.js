@@ -23,7 +23,7 @@ const Layout = () => {
                                 <>
                                     <li><Link to ="/Driver">Driver</Link></li>
                                     <li><Link to ="/Delivery">Delivery</Link></li>
-                                    
+
                                 </>
                             ) : (
                                 <>
@@ -42,6 +42,7 @@ const Layout = () => {
                             <>
                                 <li>{username}</li>
                                 <li><Link to ="/login">Logout</Link></li>
+                                
                             </>
                         ) : (
                             <>

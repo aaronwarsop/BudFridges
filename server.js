@@ -36,7 +36,7 @@ app.post('/register', async (req, res) => {
         else {
             const user = new User({ username:username, password:password, role:role, email:email });
             await user.save();
-            res.json("accountcreated");
+            res.json({status:"accountcreated", role:role});
         }
     } catch (err) {
         res.json("usernotfound");
@@ -64,11 +64,6 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-
-app.get('/', (req, res) => {
-    
-});
-
 
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {
@@ -118,13 +113,6 @@ function checkRole(req, res, next) {
       } else {
         res.status(403).send('Access Denied'); 
       }
-    } else if (req.body.role === 'head chef') {
-        if(req.path === '/healthandsafetyreport') {
-            next();
-        } else {
-            res.status(403).send('Access Denied');
-            console.log(checkRole)
-        }
     } else {
         next();
     }
@@ -195,7 +183,6 @@ async function getEmailById(driverId) {
         throw error;
     }
 }
-
 
 async function sendPasscodeToDriver(driverId, passcode) {
     

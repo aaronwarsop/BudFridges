@@ -50,7 +50,6 @@ const HealthandSafetyReport = () => {
                     <input type="text" name="" placeholder="Report Title" onChange={(e) => {setReportTitle(e.target.value)}}/>
                 </div>
                 <div className='formItem2'>
-                    <p>Gerald make report info section bigger with css pls</p>
                     <textarea name="" placeholder="Report Information" onChange={(e) => {setReportInformation(e.target.value)}}></textarea>
                 </div>
                 <div className='formItem3'>
