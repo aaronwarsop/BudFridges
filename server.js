@@ -108,7 +108,7 @@ async function generateRandomID() {
 //check role  
 function checkRole(req, res, next) {
     if(req.body.role === 'driver') {
-      if(req.path === '/delivery' || req.path === '/register' || req.path === '/login') {
+      if(req.path === '/delivery' || req.path === '/login' || req.path === '/login') {
         next();
       } else {
         res.status(403).send('Access Denied'); 
