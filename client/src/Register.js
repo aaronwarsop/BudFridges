@@ -24,8 +24,8 @@ const Register = () => {
                     alert("User already exists")
                 }
                 else if (res.data.status === "accountcreated") {
-                    const returnedRole = res.data.role;
-                    localStorage.setItem("role", returnedRole);
+                    const role = res.data.role;
+                    localStorage.setItem("role", role);
                     localStorage.setItem("username", username);
                     window.location.reload();
                     alert("Account created")

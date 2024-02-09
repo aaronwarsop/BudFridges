@@ -257,7 +257,7 @@ function grantAccessToDoor(driverId) {
 }
 
 // places order and adds item to fridge
-app.post('/order', checkRole, async (req, res) => {
+app.post('/order', async (req, res) => {
     const { username, role, orderItemName, orderQuantity } = req.body;
 
     const user = username;
